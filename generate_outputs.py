@@ -3,15 +3,15 @@
 import sys, os, getopt, json, pandas as pd
 
 def arg_parse():
-	r1 = None #read 1 filepath. For specifying individual samples
-	r2 = None #read 2 filepath. For specifying individual samples
-	ref = "/storage1/fs1/dspencer/Active/spencerlab/refdata/hg38/all_sequences.tar.gz" #reference tarball
-	samplemap = None #samplemap.csv path.
-	inputs = None #directory containing fastq pairs. 
-	bulk = False #Optional. Use --bulk to run all samples in a directory when no Samplemap.csv is present
-	complexity = False #Optional. Use --complexity to run the library complexity estimation task.
-	docker = "atex91/micro-c" #sets the virtual environment to run the majority of the workflow in.
-	jobgroup = "/spencerlab/micro-c" #sets the jobgroup parameter for LSF backends.
+	r1 = None #Optional. read 1 filepath. For specifying individual samples
+	r2 = None #Optional. read 2 filepath. For specifying individual samples
+	ref = "/storage1/fs1/dspencer/Active/spencerlab/refdata/hg38/all_sequences.tar.gz" #Required. reference tarball
+	samplemap = None #Optional. samplemap.csv path.
+	inputs = None #Optional. directory containing fastq pairs. 
+	bulk = False #Optional. For running all samples in the directory specified by inputs.
+	complexity = False #Required. Determines whether to run the lib_complexity task.
+	docker = "atex91/micro-c" #Required. sets the virtual environment to run the majority of the workflow in.
+	jobgroup = "/spencerlab/micro-c" #Required. sets the jobgroup parameter for LSF backends.
 
 	argv = sys.argv[1:]
 

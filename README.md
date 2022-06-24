@@ -4,7 +4,7 @@
 WDL implementation of [Dovetail micro-c](https://micro-c.readthedocs.io/en/latest/index.html) analysis pipeline.
 
 ## Installation
-1. Git clone the WDL 
+1. Git clone this repository.
   ```bash
   $ git clone https://github.com/miller-alexander/micro-c
   ```

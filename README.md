@@ -15,7 +15,7 @@ WDL implementation of [Dovetail micro-c](https://micro-c.readthedocs.io/en/lates
 
 ## Usage
 1. Generate the input json
-> See the launcher.py readme for information on how to generate inputs.
+> See Generate_Inputs.MD for information on how to generate inputs.
 2. Launch the WDL with Cromwell
   ```bash
   $ java -Dconfig.file=/path/to/backend_configuration -jar /cromwell/cromwell.jar run -t wdl -m outfile.json -i inputs.json micro-c.wdl

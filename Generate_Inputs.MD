@@ -6,6 +6,7 @@ Python script for generating inputs.json
   $ python generate_inputs.py [options]
   ```
   > Note: json, pandas, and getopt packages required.
+
 **Options**
 ```
 --complexity #Required. Determines whether lib_complexity task will be called

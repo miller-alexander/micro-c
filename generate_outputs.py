@@ -78,7 +78,7 @@ def main():
 	input_json["micro_c.docker"] = docker
 	input_json["micro_c.jobGroup"] = jobgroup
 
-	with open(f"{inputs}/inputs.json", "w") as outfile:
+	with open("inputs.json", "w") as outfile:
 		json.dump(input_json, outfile)
 
 if __name__ == "__main__":

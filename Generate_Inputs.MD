@@ -9,7 +9,7 @@ Python script for generating inputs.json
 
 ## Options
 ```
---complexity #Required. Determines whether lib_complexity task will be called
+--complexity #Determines whether lib_complexity task will be called
 --r1=/path/to/read_1.fastq #Optional. For running individual samples
 --r2=/path/to/read_2.fastq #Optional. For running individual samples
 --bulk #Optional. For running all samples in a directory. -i required

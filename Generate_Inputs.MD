@@ -7,7 +7,7 @@ Python script for generating inputs.json
   ```
   > Note: json, pandas, and getopt packages required.
 
-**Options**
+## Options
 ```
 --complexity #Required. Determines whether lib_complexity task will be called
 --r1=/path/to/read_1.fastq #Optional. For running individual samples

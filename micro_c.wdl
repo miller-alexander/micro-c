@@ -118,10 +118,16 @@ workflow micro_c{
 			name = fastq_pair.name
 		}
 
+		call mustache{
+			input: name = fastq_pair.name,
+			jobGroup = jobGroup,
+			mcool = create_cooler.cooler
+		}
+
 		if (run_lib_complexity){
 			call fetch_output as with_complexity{
 				input: dir = select_first(read_lines(makedir.out)),
-				files = select_all([samtools_sort.out_bam, samtools_sort.out_index, split.out_mapped, calc_stats.qc_stats, lib_complexity.out_complexity, create_hic.hic, create_cooler.cooler]),
+				files = select_all([samtools_sort.out_bam, samtools_sort.out_index, split.out_mapped, calc_stats.qc_stats, lib_complexity.out_complexity, create_hic.hic, create_cooler.cooler, mustache.mustache]),
 				jobGroup = jobGroup
 			}
 		}
@@ -129,7 +135,7 @@ workflow micro_c{
 		if (!run_lib_complexity){
 			call fetch_output as without_complexity{
 				input: dir = select_first(read_lines(makedir.out)),
-				files = select_all([samtools_sort.out_bam, samtools_sort.out_index, split.out_mapped, calc_stats.qc_stats, create_hic.hic, create_cooler.cooler]),
+				files = select_all([samtools_sort.out_bam, samtools_sort.out_index, split.out_mapped, calc_stats.qc_stats, create_hic.hic, create_cooler.cooler, mustache.mustache]),
 				jobGroup = jobGroup,
 			}
 		}
@@ -157,6 +163,12 @@ workflow micro_c{
 		name = "merged"
 	}
 
+	call mustache as merged_mustache{
+		input: name = "merged",
+		jobGroup = jobGroup,
+		mcool = create_merged_cooler.cooler
+	}
+
 	call create_hic as create_merged_hic{
 		input: ref_genome = create_index.out_genome,
 		mapped_pairs = merge_pairs.merged_pairs,
@@ -166,7 +178,7 @@ workflow micro_c{
 
 	call fetch_output as fetch_merged{
 		input: dir = outdir,
-		files = select_all([merge_pairs.merged_pairs, create_merged_hic.hic, create_merged_cooler.cooler]),
+		files = select_all([merge_pairs.merged_pairs, create_merged_hic.hic, create_merged_cooler.cooler, merged_mustache.mustache]),
 		jobGroup = jobGroup
 	}
 
@@ -520,7 +532,7 @@ task create_cooler{
 
 	command <<<
 		cooler cload pairs -c1 2 -p1 3 -c2 4 -p2 5 ~{ref_genome}:1000 ~{mapped_pairs} cooler.1000.cool 
-		cooler zoomify cooler.1000.cool -o ~{name}.contact_map.mcool
+		cooler zoomify cooler.1000.cool --balance -o ~{name}.contact_map.mcool -r N
 	>>>
 
 	output{
@@ -533,6 +545,29 @@ task create_cooler{
 		memory: "64 G"
 		job_group: jobGroup
 		docker_image: docker
+	}
+}
+
+task mustache{
+	input{
+		String jobGroup
+		String name
+		String mcool
+	}
+
+	command <<<
+		python -m mustache -f ~{mcool} -r 5kb -pt 0.05 -o ~{name}.mustache.tsv
+	>>>
+
+	output{
+		File mustache = "~{name}.mustache.tsv"
+	}
+
+	runtime{
+		cpu: "8"
+		memory: "32 G"
+		job_group: jobGroup
+		docker_image: "atex91/mustache"
 	}
 }
 
